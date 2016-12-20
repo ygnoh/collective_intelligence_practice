@@ -19,7 +19,7 @@ critics = {'Lisa Rose': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
            'Toby': {'Snakes on a Plane': 4.5, 'You, Me and Dupree': 1.0, 'Superman Returns': 4.0}}
 
 
-def sim_distance(prefs,person1,person2):
+def sim_distance(prefs, person1, person2):
     si = {}
     for item in prefs[person1]:
         if item in prefs[person2]:
@@ -62,3 +62,13 @@ def sim_pearson(prefs, p1, p2):
     r = num / den
 
     return r
+
+
+def top_matches(prefs, person, n=5, similarity=sim_pearson):
+    scores = [(similarity(prefs, person, other), other)
+              for other in prefs if other != person]
+
+    scores.sort()
+    scores.reverse()
+
+    return scores[0:n]
