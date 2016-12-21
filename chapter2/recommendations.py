@@ -72,3 +72,35 @@ def top_matches(prefs, person, n=5, similarity=sim_pearson):
     scores.reverse()
 
     return scores[0:n]
+
+
+def get_recommendations(prefs, person, similarity=sim_pearson):
+    totals = {}
+    sim_sums = {}
+
+    for other in prefs:
+        # do not compare with myself
+        if other == person:
+            continue
+
+        # calculate similarity between person and other
+        sim = similarity(prefs, person, other)
+
+        if sim <= 0:
+            continue
+
+        for item in prefs[other]:
+            # for movies person has not seen ever
+            if item not in prefs[person] or prefs[person][item] == 0:
+                totals.setdefault(item, 0)
+                totals[item] += prefs[other][item] * sim
+
+                sim_sums.setdefault(item, 0)
+                sim_sums[item] += sim
+
+    rankings = [(total / sim_sums[item], item) for item, total in totals.items()]
+
+    rankings.sort()
+    rankings.reverse()
+
+    return rankings
