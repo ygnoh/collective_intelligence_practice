@@ -132,3 +132,28 @@ def calculate_similar_items(prefs, n=10):
         result[item] = scores
 
     return result
+
+
+def get_recommended_items(prefs, item_match, user):
+    user_ratings = prefs[user]
+    scores = {}
+    total_sim = {}
+
+    for (item, rating) in user_ratings.items():
+        for (similarity, item2) in item_match[item]:
+            # if item2 is already rated by user
+            if item2 in user_ratings:
+                continue
+
+            scores.setdefault(item2, 0)
+            scores[item2] += similarity * rating
+
+            total_sim.setdefault(item2, 0)
+            total_sim[item2] += similarity
+
+    rankings = [(score / total_sim[item], item) for item, score in scores.items()]
+
+    rankings.sort()
+    rankings.reverse()
+
+    return rankings
