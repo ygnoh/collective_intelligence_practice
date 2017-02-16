@@ -154,6 +154,22 @@ def calculate_similar_items(prefs, n=10):
     return result
 
 
+def calculate_similar_people(prefs, n=10):
+    """preprocessing of similarities between each person"""
+    result = {}
+    c = 0
+
+    for person in prefs:
+        c += 1
+        if c % 100 == 0:
+            print("%d / %d" % (c, len(prefs)))
+
+        scores = top_matches(prefs, person, n=n, similarity=sim_pearson)
+        result[person] = scores
+
+    return result
+
+
 def get_recommended_items(prefs, item_match, user):
     user_ratings = prefs[user]
     scores = {}
