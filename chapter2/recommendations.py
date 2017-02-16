@@ -157,3 +157,20 @@ def get_recommended_items(prefs, item_match, user):
     rankings.reverse()
 
     return rankings
+
+
+def load_movie_lens(path='./'):
+    movies = {}
+
+    for line in open(path + 'movies.csv'):
+        (id, title) = line.split(',')[0:2]
+        movies[id] = title
+
+    prefs = {}
+
+    for line in open(path + 'ratings.csv'):
+        (user, movieid, rating, ts) = line.split(',')
+        prefs.setdefault(user, {})
+        prefs[user][movies[movieid]] = float(rating)
+
+    return prefs
