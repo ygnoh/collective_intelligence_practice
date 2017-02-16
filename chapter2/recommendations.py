@@ -64,6 +64,26 @@ def sim_pearson(prefs, p1, p2):
     return r
 
 
+def sim_tanimoto(prefs, p1, p2):
+    num_p1 = len(prefs[p1])
+    num_p2 = len(prefs[p2])
+
+    score = 1
+
+    if num_p1 == 0 and num_p2 == 0:
+        return score
+
+    num_both = 0
+
+    for item in prefs[p1]:
+        if item in prefs[p2]:
+            num_both += 1
+
+    score = num_both * 1.0 / (num_p1 + num_p2 - num_both)
+
+    return score
+
+
 def top_matches(prefs, person, n=5, similarity=sim_pearson):
     scores = [(similarity(prefs, person, other), other)
               for other in prefs if other != person]
